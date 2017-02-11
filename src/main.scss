@@ -1,0 +1,451 @@
+$font-stack: "Open Sans", "Helvetica Neue", Helvetica, Arial, Sans-Serif;
+
+/*
+ * Colors
+ */
+/* This is a gray-ish color, primary color of all text elements */
+$primary-color: #777;
+
+/* Secondary text color - also gray, but a bit darker */
+$secondary-color: #888;
+
+/* This color is used for design reasons - headers, highlighting, ... */
+$design-color: #24A0DA;
+
+/* Color of "online" player name - green */
+$online-user-color: #009933;
+
+/* Player who's on turn in a game */
+$onturn-user-color: #3333ff;
+
+
+html {
+  font-family: $font-stack;
+}
+
+body {
+  color: $primary-color;
+  line-height: 1.6;
+  margin-bottom: 112px !important;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+div.page-content {
+}
+
+@mixin header($font-size, $color) {
+  display: block;
+  margin: 1em 0em 1em 0em;
+  font-size: $font-size;
+  font-weight: normal;
+  color: $color;
+}
+
+h1 {
+  @include header(2em, $secondary-color);
+
+  &.page-head {
+    margin-left: 1em;
+    margin-right: 1em;
+    color: #000;
+  }
+}
+
+h3 {
+  @include header(1.5em, $secondary-color);
+}
+
+h4 {
+  @include header(1.2em, $secondary-color);
+}
+
+table {
+  width: 100%;
+  max-width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
+  border-spacing: 0;
+  display: table;
+  margin-bottom: 20px;
+}
+
+
+/*
+ * Forms
+ */
+input.valid, select.valid, textarea.valid {
+  border: 1px solid green !important;
+}
+
+input.invalid, select.invalid, textarea.invalid {
+	border: 1px solid red !important;
+}
+
+button {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.pure-button[disabled] {
+  opacity: 1 !important;
+  background-color: darkgray;
+}
+
+.pure-form-message-inline.required {
+  font-size: 1.2em;
+  color: red;
+}
+
+
+/*
+ * User names
+ */
+.user-name {
+  color: $primary-color;
+  cursor: pointer !important;
+}
+
+.user-online {
+  font-weight: bold !important;
+  color: $online-user-color !important;
+}
+
+.user-onturn {
+  color: $onturn-user-color !important;
+}
+
+
+/*
+ * Site Status bar
+ */
+.site-status-bar {
+  width: 100%;
+  text-align: center;
+  background-color: #000000;
+  overflow: auto;
+
+  position: fixed;
+  right: 0;
+  left: 0; 
+  z-index: 1030; 
+  margin-top: 0;
+  top: 0;
+
+  font-size: 1.2em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.site-status-bar + div.page-content {
+  margin-top: 5.5em;
+}
+
+.site-status-bar span {
+  color: #FFFFFF;
+}
+
+.site-status-bar i {
+  margin: 0.5em;
+}
+
+.site-status-bar i.maintenance {
+  color: yellow;
+}
+
+.site-status-bar i.offline {
+  color: red;
+}
+
+
+/**
+ * Navigation bar
+ */
+.public-navbar {
+  text-align: center;
+}
+
+.public-navbar span {
+  color: #24A0DA;
+  cursor: pointer;
+}
+
+.navbar {
+  width: 100%;
+  text-align: center;
+  background-color: #000000;
+  overflow: auto;
+
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+  margin-bottom: 0;
+  bottom: 0;
+}
+
+.navbar a, .navbar hr {
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  height: 64px;
+  display: inline-block;
+  height: auto;
+  font-weight: normal;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  text-align: center;
+  vertical-align: top;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  background-clip: border-box;
+  text-decoration-line: none;
+  position: relative;
+}
+
+.navbar-icon {
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 50%;
+  border-color: #FFFFFF;
+  background-clip: border-box;
+  color: #FFFFFF;
+  display: inline-block;
+  width: 42px;
+  height: 42px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  font-size: 24px;
+  line-height: 40px !important;
+}
+
+.navbar-icon:hover {
+  background-color: gray;
+}
+
+.navbar .active i {
+  background-color: #0078e7;
+}
+
+.navbar hr {
+  display: inline-block;
+  width: 0px;
+  height: 40px;
+  padding: 0;
+  margin: 14px 20px 34px 20px;
+  vertical-align: top;
+  border: 0;
+  border-left: 1px solid #ffffff;
+  cursor: default;
+}
+
+.navbar-label {
+  color: #ffffff;
+  font-size: 12px;
+  position: relative;
+  display: block;
+  width: 100%;
+  padding-right: 4px;
+  padding-left: 4px;
+  margin-top: 3px;
+  overflow: hidden;
+  line-height: 15px;
+  word-break: keep-all;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+.badge {
+  display: inline;
+  padding: 5px;
+  font-weight: bold;
+  color: #ffffff;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0px;
+  position: absolute !important;
+  top: 3px;
+  min-width: 10px;
+}
+
+.badge-info {
+  left: -3px;
+  right: auto;
+  background-color: #2d89f0;
+}
+
+
+
+/*
+ * Message box pop up
+ */
+.overlay {
+  position: fixed;
+  /*
+  top: 0;
+  bottom: 0;
+  */
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 1);
+  /*transition: opacity 500ms;*/
+  visibility: visible;
+}
+
+.popup {
+  color: #fff;
+  margin: 70px auto;
+  padding: 20px;
+  background: rgba(0, 0, 0, 1);
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+.popup .close-info {
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+.popup i {
+  padding: 0.5em;
+}
+
+.popup i.info {
+  color: blue;
+}
+
+.popup i.error {
+  color: red;
+}
+
+.popup i.success {
+  color: green;
+}
+
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.popup .close:hover {
+  color: darkgreen;
+}
+
+/*
+ * Board
+ */
+.board-post {
+  margin-bottom: 2em;
+  padding: 5px;
+}
+
+.board-post-unread {
+  border-left: 2px solid #24A0DA;
+}
+
+.board-post-header {
+  display: block;
+  font-size: 1.5em;
+}
+
+.board-post-content {
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.board-navigation {
+  text-align: right;
+
+  div {
+    display: inline-block;
+    margin-bottom: 0;
+    margin-left: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    span {
+      float: left;
+      padding: 4px 12px;
+      line-height: 20px;
+      text-decoration: none;
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+  }
+}
+
+
+/*
+ * Home Page
+ */
+.game-list {
+  thead {
+    border-bottom: 1px solid $primary-color;
+  }
+
+  th {
+    text-align: left;
+    color: $design-color;
+    padding: 4px 5px 4px 5px;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
+}
+
+.game-list-game {
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+.game-toolbar {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.game-toolbar-button {
+  background-color: #cccccc;
+  border: 2px solid grey;
+  color: #000000;
+  cursor: pointer;
+  display: inline-block;
+  width: 18px;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding: 4px 12px 4px 12px;
+  text-align: center;
+  vertical-align: middle;
+
+  &:hover {
+    background-color: gray;
+  }
+}
+
+
+.maintenance-access-users td {
+  border: 0px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
