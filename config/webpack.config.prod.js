@@ -121,7 +121,8 @@ module.exports = {
           /\.(js|jsx)$/,
           /\.css$/,
           /\.json$/,
-          /\.svg$/
+          /\.svg$/,
+          /\.scss$/
         ],
         loader: 'url',
         query: {
@@ -169,7 +170,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loader: 'style!css?importLoaders=1!postcss!sass'
+        loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1!postcss!sass')
       }
     ]
   },
