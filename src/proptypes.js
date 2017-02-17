@@ -1,6 +1,8 @@
 import { PropTypes } from 'react';
 
-const gamesListProp = PropTypes.oneOf(['', 'settlers']).isRequired;
+const fieldValidStates = PropTypes.oneOf(['valid', 'invalid', 'unknown']);
+
+const gamesListProp = PropTypes.oneOf(['', 'settlers']);
 
 const currentUserPropShape = {
   afterPassTurn: PropTypes.number.isRequired,
@@ -48,6 +50,7 @@ const boardPostPropShape = {
 };
 
 module.exports = {
+  fieldValidStates: fieldValidStates,
   gamesListProp: gamesListProp,
   currentUserPropShape: currentUserPropShape,
   commonUserPropShape: commonUserPropShape,

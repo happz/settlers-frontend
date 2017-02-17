@@ -40,29 +40,6 @@ export class Username extends Component {
 }
 
 
-export class SubmitButton extends Component {
-  static propTypes = {
-    label: PropTypes.string,
-    onClick: PropTypes.func.isRequired,
-    disabled: PropTypes.bool
-  }
-
-  static defaultProps = {
-    label: 'Submit',
-    disabled: false
-  }
-
-  render() {
-    const disabledClassName = (this.props.disabled === true ? 'disabled' : '');
-    const onClick = (this.props.disabled === true ? (event) => { event.preventDefault(); } : this.props.onClick);
-
-    return (
-      <button className={`pure-button pure-button-primary ${disabledClassName}`} onClick={onClick} disabled={this.props.disabled}>{this.props.label}</button>
-    );
-  }
-}
-
-
 export class FormRow extends Component {
   static propTypes = {
     label: PropTypes.string

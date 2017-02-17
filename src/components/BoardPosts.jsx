@@ -28,9 +28,6 @@ class BoardPost extends Component {
     onQuote: PropTypes.func.isRequired
   }
 
-  static defaultProps = {
-  }
-
   _handleUserClick = (event) => {
     event.preventDefault();
 

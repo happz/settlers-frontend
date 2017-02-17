@@ -1,17 +1,17 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+
 import { FullLayout } from '../components//ui.jsx';
-import { STATUS, update } from '../common.js';
+import { update } from '../common.js';
 import { _ } from '../localize.js';
 import { GameListHeader, GameListBody } from '../components/GameList.jsx';
-
-const log = require('loglevel');
-
-import { currentUserPropShape, gamePropShape } from '../proptypes.js';
+import { updateGameList } from '../modules/games.js';
+import { errorMessage } from '../modules/messageBox.js';
+import { gamePropShape } from '../proptypes.js';
 
 class ArchivePage extends Component {
   static propTypes = {
-    user: PropTypes.shape(currentUserPropShape).isRequired,
-    games: PropTypes.arrayOf(PropTypes.shape(gamePropShape)).isRequired
+    archivedGames: PropTypes.arrayOf(PropTypes.shape(gamePropShape)).isRequired
   }
 
   render() {
@@ -19,24 +19,16 @@ class ArchivePage extends Component {
       <FullLayout title={_('Archive')}>
         <table className="game-list">
           <GameListHeader label={_('Archived games')} />
-          <GameListBody games={this.props.games} />
+          <GameListBody games={this.props.archivedGames} />
         </table>
       </FullLayout>
     );
   }
 }
 
-export class ArchivePageContainer extends Component {
+class ArchivePageContainer extends Component {
   static propTypes = {
-    user: PropTypes.shape(currentUserPropShape).isRequired
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      archived: []
-    };
+    archivedGames: PropTypes.arrayOf(PropTypes.shape(gamePropShape)).isRequired
   }
 
   componentDidMount() {
@@ -44,27 +36,29 @@ export class ArchivePageContainer extends Component {
   }
 
   _fetchGames = () => {
-    log.warn('ArchivePageContainer._fetchGames:');
-
     update('/games/archived')
       .then((response) => {
         if (response === null)
           return;
 
-        this.setState({
-          archived: response.archived
-        });
+        this.props.dispatch(updateGameList('archivedGames', response.archived));
       })
-      .catch(function(error) {
-        STATUS.Error({
+      .catch((error) => {
+        this.props.dispatch(errorMessage({
           text: error.message
-        });
+        }));
       });
   }
 
   render() {
     return (
-      <ArchivePage user={this.props.user} games={this.state.archived} />
+      <ArchivePage archivedGames={this.props.archivedGames} />
     );
   }
 }
+
+export default connect((state) => {
+  return {
+    archivedGames: state.games.archivedGames
+  };
+})(ArchivePageContainer);

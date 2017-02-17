@@ -1,32 +1,42 @@
 import React, { Component, PropTypes } from 'react';
-import { SIGNAL } from '../common.js';
+import { connect } from 'react-redux';
+
 import { _ } from '../localize.js';
+
+import { switchPage } from '../modules/page.js';
 
 class NavBarLink extends Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
-    page: PropTypes.string.isRequired
-  }
-
-  _handleClick = (event) => {
-    event.preventDefault();
-
-    SIGNAL('page.switch', [this.props.page]);
+    onClick: PropTypes.func.isRequired
   }
 
   render() {
     return (
-      <span onClick={this._handleClick}>{_(this.props.label)}</span>
+      <span onClick={this.props.onClick}>{_(this.props.label)}</span>
     );
   }
 }
 
-export class PublicNavBar extends Component {
+class PublicNavBar extends Component {
+  _handleClick = (page, event) => {
+    event.preventDefault();
+
+    this.props.dispatch(switchPage(page));
+  }
+
   render() {
     return (
       <div className="public-navbar">
-        <NavBarLink label="Log in" page="login" /> | <NavBarLink label="New player" page="register" /> | <NavBarLink label="Password recovery" page="password-recovery" /> | <NavBarLink label="Admin log in" page="login-as" />
+        <NavBarLink label="Log in" onClick={this._handleClick.bind(this, 'login')} />
+        &nbsp;| <NavBarLink label="New player" onClick={this._handleClick.bind(this, 'register')} />
+        &nbsp;| <NavBarLink label="Password recovery" onClick={this._handleClick.bind(this, 'password-recovery')} />
+        &nbsp;| <NavBarLink label="Admin log in" onClick={this._handleClick.bind(this, 'login-as')} />
       </div>
     );
   }
 }
+
+export default connect((state) => {
+  return {}
+})(PublicNavBar);

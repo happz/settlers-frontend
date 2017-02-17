@@ -1,24 +1,35 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { _ } from '../../localize.js';
 
 require('../../settlers.scss');
 
 
+const boardSkins = ['real', 'simple'];
+const boardFieldNames = ['clay', 'grain', 'sea', 'wood', 'rock', 'sheep', 'desert'];
+const boardMaterialNames = ['clay', 'grain', 'wood', 'rock', 'sheep'];
+const boardMaterialLabels = ['Clay', 'Grain', 'Wood', 'Rock', 'Sheep'];
 const pieceColors = ['red', 'orange', 'pink', 'green', 'black', 'purple', 'light_blue', 'dark_blue', 'brown', 'dark_green'];
+
+const boardMaterialNameToLabel {
+  clay: 'Clay', grain: 'Grain', wood: 'Wood', rock: 'Rock', sheep: 'Sheep'
+};
+
+
+import { BoardAssets } from './BoardAssets.jsx';
 
 
 class Material extends Component {
   static propTypes = {
-    board_skin: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
+    skin: PropTypes.oneOf(boardSkins).isRequired,
+    name: PropTypes.oneOf(boardMaterialNames).isRequired,
+    label: PropTypes.oneOf(boardMaterialLabels).isRequired,
     count: PropTypes.number.isRequired
   }
 
   render() {
-    let image = `/static/images/games/settlers/board/${this.props.board_skin}/icons/${this.props.name}.gif`;
-
     return (
       <tr>
-        <td><img src={image} />Wood:</td>
+        <td><img src={BoardAssets[this.props.skin].fields.icons[this.props.name]} />{_(self.label)}:</td>
         <td>{this.props.count}</td>
       </tr>
     );
@@ -26,75 +37,65 @@ class Material extends Component {
 }
 
 class CurrentPlayerResources extends Component {
+  static propTypes = {
+    skin: PropTypes.oneOf(boardSkins).isRequired,
+    wood: PropTypes.number.isRequired,
+    clay: PropTypes.number.isRequired,
+    sheep: PropTypes.number.isRequired,
+    grain: PropTypes.number.isRequired,
+    rock: PropTypes.number.isRequired,
+  }
+
   render() {
     return (
-      <table>
+      <tbody>
+        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
+        <Material skin={this.props.skin} name="wood" label={_('Wood')} count={this.props.wood} />
+        <Material skin={this.props.skin} name="clay" label={_('Clay')} count={this.props.clay} />
+        <Material skin={this.props.skin} name="sheep" label={_('Sheep')} count={this.props.sheep} />
+        <Material skin={this.props.skin} name="grain" label={_('Grain')} count={this.props.grain} />
+        <Material skin={this.props.skin} name="rock" label={_('Rock')} count={this.props.rock} />
+        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
         <tr>
-          <td><strong>{{= window.hlib._g("Points")}}:</strong></td>
-          <td><strong>{this.props.points}</strong></td>
+          <td>{_('Cards')}:</td>
+          <td>{this.props.cardsUnused}</td>
         </tr>
-        <tr>
-          <td><strong>{{= window.hlib._g("Resources")}}:</td>
-          <td><strong>{this.props.resources_total}<strong></td>
-        </tr>
-
-        { this.props.isCurrent === true &&
-            <Material 
-      {{? it.my_player}}
-        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/wood.gif" />{{= window.hlib._g("Wood")}}:</td><td>{{= it.resources.wood}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/clay.gif" />{{= window.hlib._g("Clay")}}:</td><td>{{= it.resources.clay}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/sheep.gif" />{{= window.hlib._g("Sheep")}}:</td><td>{{= it.resources.sheep}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/grain.gif" />{{= window.hlib._g("Grain")}}:</td><td>{{= it.resources.grain}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/rock.gif" />{{= window.hlib._g("Rock")}}:</td><td>{{= it.resources.rock}}</td></tr>
-        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
-        <tr rel="tooltip" data-placement="right" title="{{= it.cards.unused_cards_str}}"><td>{{= window.hlib._g("Cards")}}:</td><td>{{= it.cards.unused_cards}}</td></tr>
-      {{??}}
-        <tr><td>{{= window.hlib._g("Cards")}}:</td><td>{{= it.cards.unused_cards}}</td></tr>
-      {{?}}
-      <tr><td>{{= window.hlib._g("Knights")}}:</td><td>{{= it.cards.used_knights}}</td></tr>
+      </tbody>
+    );
+  }
 }
 
-class PlayerResources extends Component {
-    <table class="table table-condensed">
-      <tr><td><strong>{{= window.hlib._g("Points")}}:</strong></td><td><strong>{{= it.points}}</strong></td></tr>
-      <tr><td><strong>{{= window.hlib._g("Resources")}}:</td><td><strong>{{= it.resources.total}}<strong></td></tr>
+class ResourceSummary extends Component {
+  static propTypes = {
+    label: PropTypes.oneOf(['Points', 'Resources']).isRequired,
+    count: PropTypes.number.isRequired
+  }
 
-      {{? it.my_player}}
-        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/wood.gif" />{{= window.hlib._g("Wood")}}:</td><td>{{= it.resources.wood}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/clay.gif" />{{= window.hlib._g("Clay")}}:</td><td>{{= it.resources.clay}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/sheep.gif" />{{= window.hlib._g("Sheep")}}:</td><td>{{= it.resources.sheep}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/grain.gif" />{{= window.hlib._g("Grain")}}:</td><td>{{= it.resources.grain}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/rock.gif" />{{= window.hlib._g("Rock")}}:</td><td>{{= it.resources.rock}}</td></tr>
-        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
-        <tr rel="tooltip" data-placement="right" title="{{= it.cards.unused_cards_str}}"><td>{{= window.hlib._g("Cards")}}:</td><td>{{= it.cards.unused_cards}}</td></tr>
-      {{??}}
-        <tr><td>{{= window.hlib._g("Cards")}}:</td><td>{{= it.cards.unused_cards}}</td></tr>
-      {{?}}
-      <tr><td>{{= window.hlib._g("Knights")}}:</td><td>{{= it.cards.used_knights}}</td></tr>
+  render() {
+    return (
+      <tr>
+        <td><strong>{this.props.label}:</strong></td>
+        <td><strong>{this.props.points}</strong></td>
+      </tr>
+    );
+  }
 }
 
-class PlayerResources extends Component {
-    <table class="table table-condensed">
-      <tr><td><strong>{{= window.hlib._g("Points")}}:</strong></td><td><strong>{{= it.points}}</strong></td></tr>
-      <tr><td><strong>{{= window.hlib._g("Resources")}}:</td><td><strong>{{= it.resources.total}}<strong></td></tr>
+class Resource extends Component {
+  static propTypes = {
+    label: PropTypes.oneOf(['Knights', 'Cards']).isRequired,
+    count: PropTypes.number.isRequired
+  }
 
-      {{? it.my_player}}
-        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/wood.gif" />{{= window.hlib._g("Wood")}}:</td><td>{{= it.resources.wood}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/clay.gif" />{{= window.hlib._g("Clay")}}:</td><td>{{= it.resources.clay}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/sheep.gif" />{{= window.hlib._g("Sheep")}}:</td><td>{{= it.resources.sheep}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/grain.gif" />{{= window.hlib._g("Grain")}}:</td><td>{{= it.resources.grain}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/rock.gif" />{{= window.hlib._g("Rock")}}:</td><td>{{= it.resources.rock}}</td></tr>
-        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
-        <tr rel="tooltip" data-placement="right" title="{{= it.cards.unused_cards_str}}"><td>{{= window.hlib._g("Cards")}}:</td><td>{{= it.cards.unused_cards}}</td></tr>
-      {{??}}
-        <tr><td>{{= window.hlib._g("Cards")}}:</td><td>{{= it.cards.unused_cards}}</td></tr>
-      {{?}}
-      <tr><td>{{= window.hlib._g("Knights")}}:</td><td>{{= it.cards.used_knights}}</td></tr>
+  render() {
+    return (
+      <tr>
+        <td>{this.props.label}:</td>
+        <td>{this.props.points}</td>
+      </tr>
+    );
+  }
 }
-
 
 class MightestChivalryTag extends Component {
   render() {
@@ -137,32 +138,36 @@ class Header extends Component {
   }
 }
 
-window.settlers.templates.game.player = doT.template '
-  <div class="playable-player">
-    <Header
-      name={this.props.user.name}
-      color={this.props.color}
-      hasMightiestChilvary={this.props.hasMightiestChilvary}
-      hasLongestRoad={hasLongestRoad} />
+class Player extends Component {
+  render() {
+    if (this.props.isCurrent) {
+      let resources = <CurrentPlayerResources
+        skin={this.props.skin}
+        wood={this.props.resources.wood}
+        clay={this.props.resources.clay}
+        sheep={this.props.resources.sheep}
+        grain={this.props.resources.grain}
+        rock={this.props.resources.rock} />;
+    } else {
+      let resources = <Resource label="Cards" count={this.props.cards.unused} />;
+    }
 
-    <table class="table table-condensed">
-      <tr><td><strong>{{= window.hlib._g("Points")}}:</strong></td><td><strong>{{= it.points}}</strong></td></tr>
-      <tr><td><strong>{{= window.hlib._g("Resources")}}:</td><td><strong>{{= it.resources.total}}<strong></td></tr>
+    return (
+      <div class="playable-player">
+        <Header
+          name={this.props.user.name}
+          color={this.props.color}
+          hasMightiestChilvary={this.props.hasMightiestChilvary}
+          hasLongestRoad={hasLongestRoad} />
 
-      {{? it.my_player}}
-        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/wood.gif" />{{= window.hlib._g("Wood")}}:</td><td>{{= it.resources.wood}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/clay.gif" />{{= window.hlib._g("Clay")}}:</td><td>{{= it.resources.clay}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/sheep.gif" />{{= window.hlib._g("Sheep")}}:</td><td>{{= it.resources.sheep}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/grain.gif" />{{= window.hlib._g("Grain")}}:</td><td>{{= it.resources.grain}}</td></tr>
-        <tr><td><img src="/static/images/games/settlers/board/{{= window.settlers.game.render_info.board_skin}}/icons/rock.gif" />{{= window.hlib._g("Rock")}}:</td><td>{{= it.resources.rock}}</td></tr>
-        <tr><td colspan="2"><hr class="my-player-separator"/></td></tr>
-        <tr rel="tooltip" data-placement="right" title="{{= it.cards.unused_cards_str}}"><td>{{= window.hlib._g("Cards")}}:</td><td>{{= it.cards.unused_cards}}</td></tr>
-      {{??}}
-        <tr><td>{{= window.hlib._g("Cards")}}:</td><td>{{= it.cards.unused_cards}}</td></tr>
-      {{?}}
-      <tr><td>{{= window.hlib._g("Knights")}}:</td><td>{{= it.cards.used_knights}}</td></tr>
-    </table>
-  </div>
-'
+        <table>
+          <ResourceSummary label={_('Points')} count={this.props.points} />
+          <ResourceSummary label={_('Resources')} count={this.props.resourcesSum} />
 
+          {resources}
+          <Resource label="Knights" count={this.props.cards.usedKnights} />
+        </table>
+      </div>
+    );
+  }
+}

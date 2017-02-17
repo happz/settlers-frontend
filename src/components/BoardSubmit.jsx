@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { Form, FinalFormRow, SubmitButton } from './ui.jsx';
+import { Form, FinalFormRow } from './ui.jsx';
 import { TextArea } from '../components/forms/TextArea.jsx';
+import SubmitButton from '../components/forms/SubmitButton.jsx';
 import { _ } from '../localize.js';
 import { validators } from '../validators.js';
 
@@ -15,12 +16,12 @@ export class BoardSubmitForm extends Component {
     super(props);
 
     this.state = {
-      text: TextArea.createInitialState('', false)
+      text: TextArea.createInitialState('', 'invalid')
     };
   }
 
   _isValid = () => {
-    return this.state.text.valid === true;
+    return this.state.text.valid === 'valid';
   }
 
   _handleSubmit = (event) => {
@@ -31,14 +32,12 @@ export class BoardSubmitForm extends Component {
 
     this.props.onSubmit(this.state.text, () => {
       this.setState({
-        text: TextArea.createInitialState()
+        text: TextArea.createInitialState('', 'invalid')
       });
     });
   }
 
   render() {
-    console.log(this.state);
-
     return (
       <Form legend={_('New message')}>
         <FinalFormRow>
@@ -47,7 +46,6 @@ export class BoardSubmitForm extends Component {
             value={this.state.text.value}
             valid={this.state.text.valid}
             required={true}
-            showValidation={true}
             onChange={TextArea.createChangeHandler(this, 'text', [validators.notblank])} />
         </FinalFormRow>
 
