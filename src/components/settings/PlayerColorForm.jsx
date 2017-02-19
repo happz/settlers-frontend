@@ -152,12 +152,13 @@ class PlayerColorFormContainer extends Component {
   render() {
     return (
       <PlayerColorForm
-        game={this.state.game.value}
         color={this.state.color}
-        onGameChange={this._handleGameChange}
+        game={this.state.game.value}
+        isValid={this._isValid}
         onColorChange={this._handleColorChange}
+        onGameChange={this._handleGameChange}
         onSubmit={this._handleSubmit}
-        isValid={this._isValid} />
+      />
     );
   }
 }

@@ -1,10 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { update } from '../common.js';
 import { _ } from '../localize.js';
-import { updateFreeGamesCount } from '../modules/navbar.js';
+import { fetchRecentEvents } from '../modules/navbar.js';
 import { switchPage } from '../modules/page.js';
-import { errorMessage } from '../modules/messageBox.js';
 
 const FontAwesome = require('react-fontawesome');
 
@@ -133,30 +131,19 @@ class PrivateNavBarContainer extends Component {
   }
 
   componentDidMount() {
-    this._updateTimer = setInterval(this._fetchRecentEvents, 60000);
-    this._fetchRecentEvents();
+    this._updateTimer = setInterval(() => {
+      this.props.dispatch(fetchRecentEvents());
+    }, 60000);
+
+    this.props.dispatch(fetchRecentEvents());
   }
 
   componentWillUnmount() {
-    if (this._updateTimer !== null) {
-      clearInterval(this._updateTimer);
-      this._updateTimer = null;
-    }
-  }
+    if (this._updateTimer === null)
+      return;
 
-  _fetchRecentEvents = () => {
-    update('/recent')
-      .then((response) => {
-        if (response === null)
-          return;
-
-        this.props.dispatch(updateFreeGamesCount(response.hasOwnProperty('freeGamesCount') ? response.freeGamesCount : 0));
-      })
-      .catch((error) => {
-        this.props.dispatch(errorMessage({
-          text: error.message
-        }));
-      });
+    clearInterval(this._updateTimer);
+    this._updateTimer = null;
   }
 
   render() {

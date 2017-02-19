@@ -11,11 +11,11 @@ import { successMessage, errorMessage } from '../modules/messageBox.js';
 
 class GrantMaintenanceAccessForm extends Component {
   static propTypes = {
-    username: PropTypes.string.isRequired,
-    usernameValid: fieldValidStates.isRequired,
-    onUsernameChange: PropTypes.func.isRequired,
+    isValid: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    isValid: PropTypes.func.isRequired
+    onUsernameChange: PropTypes.func.isRequired,
+    username: PropTypes.string.isRequired,
+    usernameValid: fieldValidStates.isRequired
   }
 
   render() {

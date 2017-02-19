@@ -1,5 +1,7 @@
 import { PropTypes } from 'react';
 
+const siteStatusValues = PropTypes.oneOf(['online', 'maintenance', 'offline']);
+
 const fieldValidStates = PropTypes.oneOf(['valid', 'invalid', 'unknown']);
 
 const gamesListProp = PropTypes.oneOf(['', 'settlers']);
@@ -50,6 +52,7 @@ const boardPostPropShape = {
 };
 
 module.exports = {
+  siteStatusValues: siteStatusValues,
   fieldValidStates: fieldValidStates,
   gamesListProp: gamesListProp,
   currentUserPropShape: currentUserPropShape,

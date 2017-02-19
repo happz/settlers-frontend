@@ -1,6 +1,5 @@
-import Raven from 'raven-js';
-
-Raven.config('https://69eefb0fcc0940cfb2b03a2e8a136b56@sentry.io/139558').install();
+//import Raven from 'raven-js';
+//Raven.config('https://69eefb0fcc0940cfb2b03a2e8a136b56@sentry.io/139558').install();
 
 import React from 'react';
 import ReactDOM from 'react-dom';

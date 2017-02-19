@@ -1,15 +1,14 @@
 import { PropTypes } from 'react';
 import { fieldValidStates } from '../../proptypes.js';
-import { _ } from '../../localize.js';
 
-module.exports.FieldPropTypes = {
+export const FieldPropTypes = {
   value: PropTypes.string.isRequired,
   valid: fieldValidStates.isRequired,
   onChange: PropTypes.func.isRequired,
   required: PropTypes.bool.isRequired
 };
 
-module.exports.Field = class {
+export class Field {
   static createInitialState(value, valid) {
     return {
       value: value,
@@ -35,12 +34,12 @@ module.exports.Field = class {
 
         state[name] = {
           value: value,
-          valid: (valid === true ? 'valid' : 'invalid')
+          valid: valid === true ? 'valid' : 'invalid'
         };
       }
 
       container.setState(state);
-    }
+    };
   }
 
   static validClass(field) {
@@ -51,7 +50,7 @@ module.exports.Field = class {
       return 'invalid';
 
     if (field.props.valid === 'unknown')
-      return (field.props.required === true ? 'invalid' : null);
+      return field.props.required === true ? 'invalid' : null;
 
     return null;
   }

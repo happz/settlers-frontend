@@ -1,12 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FullLayout } from '../components//ui.jsx';
-import { update } from '../common.js';
 import { _ } from '../localize.js';
 import { GameListHeader, GameListBody } from '../components/GameList.jsx';
-import { updateGameList } from '../modules/games.js';
+import { fetchGames } from '../modules/games.js';
 import { gamePropShape } from '../proptypes.js';
-import { errorMessage } from '../modules/messageBox.js';
 
 class HomePage extends Component {
   static propTypes = {
@@ -45,32 +43,19 @@ class HomePageContainer extends Component {
   }
 
   componentDidMount() {
-    this._updateTimer = setInterval(this._fetchGames, 300000);
-    this._fetchGames();
+    this._updateTimer = setInterval(() => {
+      this.props.dispatch(fetchGames());
+    }, 300000);
+
+    this.props.dispatch(fetchGames());
   }
 
   componentWillunmount() {
-    if (this._updateTimer !== null) {
-      clearInterval(this._updateTimer);
-      this._updateTimer = null;
-    }
-  }
+    if (this._updateTimer === null)
+      return;
 
-  _fetchGames = () => {
-    update('/games')
-      .then((response) => {
-        if (response === null)
-          return;
-
-        this.props.dispatch(updateGameList('activeGames', response.active));
-        this.props.dispatch(updateGameList('freeGames', response.free));
-        this.props.dispatch(updateGameList('inactiveGames', response.inactive));
-      })
-      .catch((error) => {
-        this.props.dispatch(errorMessage({
-          text: error.message
-        }));
-      });
+    clearInterval(this._updateTimer);
+    this._updateTimer = null;
   }
 
   render() {

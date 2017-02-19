@@ -1,7 +1,9 @@
 import { createStore, applyMiddleware } from 'redux';
 import RavenMiddleware from 'redux-raven-middleware';
+import createSagaMiddleware from 'redux-saga';
 
 import reducer from './reducer.js';
+import rootSaga from './sagas.js';
 
 function initJWT() {
   const jwt = sessionStorage.getItem('JWT');
@@ -18,6 +20,10 @@ function initJWT() {
   };
 }
 
+
+const ravenMiddleware = RavenMiddleware('https://69eefb0fcc0940cfb2b03a2e8a136b56@sentry.io/139558');
+const sagaMiddleware = createSagaMiddleware();
+
 const store = createStore(reducer, {
   jwt: initJWT(),
   navbar: {
@@ -26,6 +32,11 @@ const store = createStore(reducer, {
   },
   siteStatus: 'online',
   page: null,
+
+  game: {
+    page: null,
+    game: null
+  },
 
   games: {
     activeGames: [],
@@ -47,6 +58,8 @@ const store = createStore(reducer, {
     needsClose: false,
     onClose: null
   }
-}, applyMiddleware(RavenMiddleware('https://69eefb0fcc0940cfb2b03a2e8a136b56@sentry.io/139558')));
+}, applyMiddleware(ravenMiddleware, sagaMiddleware));
+
+sagaMiddleware.run(rootSaga);
 
 export default store;

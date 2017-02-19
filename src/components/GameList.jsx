@@ -6,6 +6,8 @@ const log = require('loglevel');
 const FontAwesome = require('react-fontawesome');
 
 import { playerPropShape, gamePropShape } from '../proptypes.js';
+import store from '../store.js';
+import { enterGame } from '../modules/game.js';
 
 class GameButton extends Component {
   static propTypes = {
@@ -107,24 +109,30 @@ class Game extends Component {
   _handleUserClick = (event) => {
   }
 
+  _handleGameEnter = (game, page) => {
+    log.debug('_handleGameEnter: game=%O, page=%O', game, page);
+
+    store.dispatch(enterGame('settlers', game.id, page));
+  }
+
   _handleJoin = (game) => {
     log.debug('Game._handleJoin: game:', game);
   }
 
   _handleBoard = (game) => {
-    log.debug('Game._handleBoard: game:', game);
+    this._handleGameEnter(game, 'game');
   }
 
   _handleHistory = (game) => {
-    log.debug('Game._handleHistory: game:', game);
+    this._handleGameEnter(game, 'history');
   }
 
   _handleChat = (game) => {
-    log.debug('Game._handleChat: game:', game);
+    this._handleGameEnter(game, 'board');
   }
 
   _handleStats = (game) => {
-    log.debug('Game._handleStats: game:', game);
+    this._handleGameEnter(game, 'stats');
   }
 
   render() {

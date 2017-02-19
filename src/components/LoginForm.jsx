@@ -1,22 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-
 import { Form, FormRow, FinalFormRow } from '../components/ui.jsx';
 import { InputField } from '../components/forms/InputField.jsx';
 import SubmitButton from '../components/forms/SubmitButton.jsx';
-import { update } from '../common.js';
 import { validators } from '../validators.js';
-
 import { fieldValidStates } from '../proptypes.js';
-
-import { switchPage } from '../modules/page.js';
-import { errorMessage } from '../modules/messageBox.js';
-
-const log = require('loglevel');
-
+import { logIn } from '../modules/login.js';
 import { _ } from '../localize.js';
-
-const md5 = require('js-md5');
 
 
 class LoginForm extends Component {
@@ -78,25 +68,7 @@ class LoginFormContainer extends Component {
     if (!this._isValid())
       return;
 
-    update('/login', {
-      username: this.state.username.value,
-      password: md5.hex(this.state.password.value)
-    })
-      .then((response) => {
-        log.debug('fetch(/login): userspace response: %O', response);
-
-        if (response === null)
-          return;
-
-        this.props.dispatch(switchPage('settings'));
-      })
-      .catch((error) => {
-        log.debug('fetch(/login): userspace catch: %O', error);
-
-        this.props.dispatch(errorMessage({
-          text: _(error.message)
-        }));
-      });
+    this.props.dispatch(logIn(this.state.username.value, this.state.password.value));
   }
 
   render() {

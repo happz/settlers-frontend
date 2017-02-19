@@ -1,14 +1,13 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { update } from '../common.js';
-import { errorMessage } from '../modules/messageBox.js';
-import { updateSiteStatus } from '../modules/siteStatus.js';
+import { fetchSiteStatus } from '../modules/siteStatus.js';
+import { siteStatusValues } from '../proptypes.js';
 
 const FontAwesome = require('react-fontawesome');
 
 class SiteStatusBar extends Component {
   static propTypes = {
-    status: PropTypes.oneOf(['online', 'maintenance', 'offline']).isRequired
+    status: siteStatusValues.isRequired
   }
 
   render() {
@@ -34,7 +33,7 @@ class SiteStatusBar extends Component {
 
 class SiteStatusBarContainer extends Component {
   static propTypes = {
-    status: PropTypes.oneOf(['online', 'maintenance', 'offline']).isRequired
+    status: siteStatusValues.isRequired
   }
 
   constructor(props) {
@@ -43,24 +42,12 @@ class SiteStatusBarContainer extends Component {
     this._siteStatusTimer = null;
   }
 
-  _fetchSiteStatus = () => {
-    update('/site-status')
-      .then((response) => {
-        if (response === null)
-          return;
-
-        this.props.dispatch(updateSiteStatus(response.maintenance === true ? 'maintenance' : 'online'));
-      })
-      .catch((error) => {
-        this.props.dispatch(errorMessage({
-          text: error.message
-        }));
-      });
-  }
-
   componentDidMount() {
-    this._siteStatusTimer = setInterval(this._fetchSiteStatus, 30000);
-    this._fetchSiteStatus();
+    this._siteStatusTimer = setInterval(() => {
+      this.props.dispatch(fetchSiteStatus());
+    }, 30000);
+
+    this.props.dispatch(fetchSiteStatus());
   }
 
   componentWillUnmount() {

@@ -9,6 +9,7 @@ import HomePageContainer from '../pages/Home.jsx';
 import NewPageContainer from '../pages/New.jsx';
 import { SettingsPage } from '../pages/Settings.jsx';
 import { AdminPage } from '../pages/Admin.jsx';
+import SettlersPageContainer from '../pages/Settlers.jsx';
 
 import MessageBoxContainer from './MessageBox.jsx';
 import PrivateNavBarContainer from './PrivateNavBar.jsx';
@@ -18,12 +19,9 @@ import TrumpetBarContainer from './TrumpetBar.jsx';
 
 import SiteStatusBarContainer from './SiteStatusBar.jsx';
 
-import { update } from '../common.js';
-
-import { _ } from '../localize.js';
-
-import { errorMessage } from '../modules/messageBox.js';
 import { switchPage } from '../modules/page.js';
+import { enterGame } from '../modules/game.js';
+import { pingBackend } from '../modules/navbar.js';
 import store from '../store.js';
 
 const log = require('loglevel');
@@ -69,6 +67,9 @@ class App extends Component {
         case 'settings':
           page = <SettingsPage />
           break;
+        case 'settlers':
+          page = <SettlersPageContainer />;
+          break;
         default:
           log.error('Unhandled page:', this.props.page);
           page = null;
@@ -105,14 +106,9 @@ class AppContainer extends Component {
 
   componentDidMount() {
     if (store.getState().jwt.authenticated === true) {
-      this.props.dispatch(switchPage('new'));
-
-      update('/ping')
-        .catch((error) => {
-          this.props.dispatch(errorMessage({
-            text: error.message
-          }));
-        });
+      //this.props.dispatch(switchPage('new'));
+      this.props.dispatch(enterGame('settlers', 41, 'history'));
+      this.props.dispatch(pingBackend());
     } else {
       this.props.dispatch(switchPage('login'));
     }
@@ -120,7 +116,10 @@ class AppContainer extends Component {
 
   render() {
     return (
-      <App page={this.props.page} hasUser={this.props.hasUser} />
+      <App
+        hasUser={this.props.hasUser}
+        page={this.props.page}
+      />
     );
   }
 }

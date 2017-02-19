@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 
+import game from './modules/game.js';
 import games from './modules/games.js';
 import navbar from './modules/navbar.js';
 import jwt from './modules/jwt.js';
@@ -11,6 +12,7 @@ import user from './modules/user.js';
 
 export default combineReducers({
   games: games,
+  game: game,
   jwt: jwt,
   messageBox: messageBox,
   navbar: navbar,
